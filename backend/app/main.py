@@ -1,0 +1,33 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+from app.core.database import supabase
+from app.routers import products
+
+load_dotenv()
+
+app = FastAPI(title="Institute E-Commerce API", version="1.0.0")
+
+# Enable CORS for Frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(products.router, prefix="/api")
+
+@app.get("/")
+def read_root():
+    return {"status": "ok", "message": "API IS UPDATED"}
+
+@app.get("/health")
+def health_check():
+    try:
+        # Simple query to check DB connection
+        response = supabase.table("products").select("id").limit(1).execute()
+        return {"status": "healthy", "db_connection": "active"}
+    except Exception as e:
+        return {"status": "unhealthy", "error": str(e)}
