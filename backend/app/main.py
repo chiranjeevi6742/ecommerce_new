@@ -24,13 +24,9 @@ app.include_router(products.router, prefix="/api")
 app.include_router(orders.router, prefix="/api")
 app.include_router(analytics.router, prefix="/api")
 app.include_router(customers.router, prefix="/api")
-app.include_router(payments.router, prefix="/api")
+app.include_router(payments.router)
 
 @app.get("/")
-def read_root():
-    return {"status": "ok", "message": "API IS UPDATED"}
-
-@app.get("/health")
 def health_check():
     try:
         # Simple query to check DB connection
