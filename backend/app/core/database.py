@@ -21,6 +21,15 @@ print(f"DEBUG: Loading DB connection. URL: {SUPABASE_URL}")
 print(f"DEBUG: Key Length: {len(SUPABASE_KEY) if SUPABASE_KEY else 0}")
 
 if not SUPABASE_URL or not SUPABASE_KEY:
-    raise ValueError("Missing SUPABASE_URL or SUPABASE_KEY environment variables")
-
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    print("CRITICAL WARNING: SUPABASE_URL or SUPABASE_KEY missing in environment variables.")
+    # We will try to create client anyway, possibly with None, to allow app to import.
+    # It will fail when used.
+    
+try:
+    supabase: Client = create_client(SUPABASE_URL or "", SUPABASE_KEY or "")
+except Exception as e:
+    print(f"Failed to initialize Supabase client: {e}")
+    # Create a dummy client or let it be None, handled by logic using it
+    class DummyClient:
+        def table(self, *args, **kwargs): raise Exception("Supabase not initialized")
+    supabase = DummyClient()
