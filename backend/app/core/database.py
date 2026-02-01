@@ -4,9 +4,15 @@ from dotenv import load_dotenv, find_dotenv
 from pathlib import Path
 
 # Force load from the backend directory
-env_path = Path(__file__).resolve().parent.parent.parent / ".env"
-print(f"DEBUG: Loading .env from {env_path}")
-load_dotenv(dotenv_path=env_path)
+try:
+    env_path = Path(__file__).resolve().parent.parent.parent / ".env"
+    if env_path.exists():
+        print(f"DEBUG: Loading .env from {env_path}")
+        load_dotenv(dotenv_path=env_path)
+    else:
+        print("DEBUG: No .env file found (expected in production environment)")
+except Exception as e:
+    print(f"DEBUG: Error accessing .env file: {e}")
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
