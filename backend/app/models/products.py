@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from decimal import Decimal
 
 class ProductBase(BaseModel):
@@ -9,7 +9,7 @@ class ProductBase(BaseModel):
     stock: int
     category: str
     image_url: Optional[str] = None
-    images: list[str] = []
+    images: List[str] = []
     is_active: bool = True
 
 class ProductCreate(ProductBase):
