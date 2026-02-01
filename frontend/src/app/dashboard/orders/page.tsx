@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Order } from "@/types/order";
 import { Loader2, Search, Filter, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { updateOrderStatus } from "@/lib/api";
+import Link from "next/link";
 
 export default function OrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -108,14 +110,31 @@ export default function OrdersPage() {
                                             ${order.total_amount.toFixed(2)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={cn("px-2.5 py-1 rounded-full text-xs font-medium", getStatusColor(order.status))}>
-                                                {order.status}
-                                            </span>
+                                            <select
+                                                value={order.status}
+                                                onChange={async (e) => {
+                                                    try {
+                                                        const newStatus = e.target.value;
+                                                        await updateOrderStatus(order.id, newStatus);
+                                                        // Optimistic update
+                                                        setOrders(orders.map(o => o.id === order.id ? { ...o, status: newStatus } : o));
+                                                    } catch (err) {
+                                                        alert("Failed to update status");
+                                                    }
+                                                }}
+                                                className={cn("px-2 py-1 rounded-full text-xs font-medium border-0 cursor-pointer focus:ring-1 focus:ring-slate-300", getStatusColor(order.status))}
+                                            >
+                                                {["Pending", "Paid", "Processing", "Shipped", "Delivered", "Cancelled"].map(s => (
+                                                    <option key={s} value={s}>{s}</option>
+                                                ))}
+                                            </select>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <button className="text-slate-400 hover:text-blue-600 transition-colors">
-                                                <Eye className="h-5 w-5" />
-                                            </button>
+                                            <Link href={`/orders/${order.id}/track`}>
+                                                <button className="text-slate-400 hover:text-blue-600 transition-colors" title="Track Order">
+                                                    <Eye className="h-5 w-5" />
+                                                </button>
+                                            </Link>
                                         </td>
                                     </tr>
                                 ))

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.core.database import supabase
-from app.models.orders import StockCheckRequest, OrderCreate, OrderResponse
+from app.models.orders import StockCheckRequest, OrderCreate, OrderResponse, OrderStatusUpdate
 from typing import List
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
@@ -42,7 +42,8 @@ def create_order(order: OrderCreate):
         "zip_code": order.shipping_address.zipCode,
         "total_amount": order.total_amount,
         "payment_method": order.payment_method,
-        "status": "Pending"
+        "status": "Pending",
+        "transaction_id": order.transaction_id
     }
 
     res_order = supabase.table("orders").insert(order_data).execute()
@@ -89,3 +90,38 @@ def get_all_orders():
 def get_user_orders(user_id: str):
     res = supabase.table("orders").select("*").eq("user_id", user_id).order("created_at", desc=True).execute()
     return res.data
+
+@router.patch("/{order_id}/status")
+def update_order_status(order_id: str, update: OrderStatusUpdate):
+    valid_statuses = ["Pending", "Paid", "Processing", "Shipped", "Delivered", "Cancelled"]
+    if update.status not in valid_statuses:
+        raise HTTPException(status_code=400, detail=f"Invalid status. Must be one of {valid_statuses}")
+
+    res = supabase.table("orders").update({"status": update.status}).eq("id", order_id).execute()
+    if not res.data:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    return {"message": "Status updated successfully", "data": res.data[0]}
+
+@router.get("/{order_id}", response_model=OrderResponse)
+def get_order_by_id(order_id: str):
+    # Fetch Order
+    res = supabase.table("orders").select("*").eq("id", order_id).execute()
+    if not res.data:
+         raise HTTPException(status_code=404, detail="Order not found")
+    
+    order = res.data[0]
+    
+    # Fetch Items with Product Details
+    # Using manual merge for reliability
+    items_res = supabase.table("order_items").select("*").eq("order_id", order_id).execute()
+    items = items_res.data
+    
+    for item in items:
+        prod_res = supabase.table("products").select("name, image_url, description").eq("id", item["product_id"]).execute()
+        if prod_res.data:
+            item["product"] = prod_res.data[0]
+            
+    order["items"] = items
+    
+    return order

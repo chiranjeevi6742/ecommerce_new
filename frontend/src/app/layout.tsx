@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { CartProvider } from "@/providers/CartProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import Script from "next/script";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -32,6 +33,11 @@ export default function RootLayout({
             </CartProvider>
           </AuthProvider>
         </ThemeProvider>
+        <Script
+          id="razorpay-checkout-js"
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );

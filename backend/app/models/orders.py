@@ -20,6 +20,7 @@ class OrderCreate(BaseModel):
     total_amount: float
     shipping_address: ShippingAddress
     payment_method: str
+    transaction_id: Optional[str] = None
 
 class OrderItemResponse(BaseModel):
     product_id: str
@@ -46,3 +47,6 @@ class StockCheckItem(BaseModel):
 
 class StockCheckRequest(BaseModel):
     items: List[StockCheckItem]
+
+class OrderStatusUpdate(BaseModel):
+    status: str
