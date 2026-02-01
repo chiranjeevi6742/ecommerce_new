@@ -10,6 +10,12 @@ def get_products():
     res = supabase.table("products").select("*").order("created_at", desc=True).execute()
     return res.data
 
+@router.get("/public", response_model=List[ProductResponse])
+def get_public_products():
+    # Only fetch active products for the storefront
+    res = supabase.table("products").select("*").eq("is_active", True).order("created_at", desc=True).execute()
+    return res.data
+
 @router.post("/", response_model=ProductResponse)
 def create_product(product: ProductCreate):
     # Convert Decimal to float for JSON serialization if needed by supabase-py, 

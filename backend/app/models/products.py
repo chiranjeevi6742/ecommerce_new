@@ -9,6 +9,7 @@ class ProductBase(BaseModel):
     stock: int
     category: str
     image_url: Optional[str] = None
+    images: list[str] = []
     is_active: bool = True
 
 class ProductCreate(ProductBase):

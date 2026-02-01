@@ -130,9 +130,11 @@ export default function ProductsPage() {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex justify-end gap-2">
-                                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                                    <Pencil className="h-4 w-4 text-slate-500" />
-                                                </Button>
+                                                <Link href={`/dashboard/products/edit/${product.id}`}>
+                                                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                                        <Pencil className="h-4 w-4 text-slate-500" />
+                                                    </Button>
+                                                </Link>
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"

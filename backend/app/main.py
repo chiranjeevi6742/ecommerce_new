@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from app.core.database import supabase
-from app.routers import products
+from app.routers import products, orders, analytics, customers
 
 load_dotenv()
 
@@ -18,6 +18,9 @@ app.add_middleware(
 )
 
 app.include_router(products.router, prefix="/api")
+app.include_router(orders.router, prefix="/api")
+app.include_router(analytics.router, prefix="/api")
+app.include_router(customers.router, prefix="/api")
 
 @app.get("/")
 def read_root():
