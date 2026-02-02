@@ -31,7 +31,8 @@ export default function DashboardOverview() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch('http://localhost:8001/api/analytics/dashboard');
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api';
+                const res = await fetch(`${apiUrl}/analytics/dashboard`);
                 if (res.ok) {
                     setData(await res.json());
                 }
