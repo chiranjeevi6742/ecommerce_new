@@ -24,7 +24,7 @@ app.include_router(products.router, prefix="/api")
 app.include_router(orders.router, prefix="/api")
 app.include_router(analytics.router, prefix="/api")
 app.include_router(customers.router, prefix="/api")
-app.include_router(payments.router)
+app.include_router(payments.router, prefix="/api")
 
 @app.get("/")
 def health_check():
