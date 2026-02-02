@@ -37,12 +37,10 @@ try:
     
     # Add a debug route to list installed packages
     from fastapi import Response
-    import pkg_resources
     
     @app.get("/debug-env")
     def debug_env():
-        installed_packages = [f"{p.project_name}=={p.version}" for p in pkg_resources.working_set]
-        return {"packages": installed_packages, "sys_path": sys.path}
+        return {"sys_path": sys.path, "status": "Debugging active"}
 
 except Exception as e:
     import traceback
