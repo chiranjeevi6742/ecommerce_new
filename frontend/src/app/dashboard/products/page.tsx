@@ -20,7 +20,8 @@ export default function ProductsPage() {
                 // We'll use the public API we created in Backend
                 // But for Admin, we can also use Supabase directly if we want
                 // Let's use the Backend API to be consistent with architecture
-                const res = await fetch('http://localhost:8001/api/products');
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api';
+                const res = await fetch(`${apiUrl}/products`);
                 if (res.ok) {
                     const data = await res.json();
                     setProducts(data);
@@ -45,7 +46,8 @@ export default function ProductsPage() {
         // Optimistic update
         setProducts(products.filter(p => p.id !== id));
 
-        await fetch(`http://localhost:8001/api/products/${id}`, {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api';
+        await fetch(`${apiUrl}/products/${id}`, {
             method: 'DELETE'
         });
     };

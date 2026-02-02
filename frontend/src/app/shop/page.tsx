@@ -27,7 +27,8 @@ function ShopContent() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const res = await fetch('http://localhost:8001/api/products/public');
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api';
+                const res = await fetch(`${apiUrl}/products/public`);
                 if (res.ok) {
                     const data = await res.json();
                     setProducts(data);

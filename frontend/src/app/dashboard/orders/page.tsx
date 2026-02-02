@@ -14,7 +14,8 @@ export default function OrdersPage() {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const res = await fetch('http://localhost:8001/api/orders');
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api';
+                const res = await fetch(`${apiUrl}/orders`);
                 if (res.ok) {
                     const data = await res.json();
                     setOrders(data);

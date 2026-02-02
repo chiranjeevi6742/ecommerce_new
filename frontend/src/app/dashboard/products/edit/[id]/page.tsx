@@ -33,7 +33,8 @@ export default function EditProductPage() {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const res = await fetch(`http://localhost:8001/api/products/${id}`);
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api';
+                const res = await fetch(`${apiUrl}/products/${id}`);
                 if (res.ok) {
                     const data = await res.json();
                     setFormData({
@@ -137,7 +138,8 @@ export default function EditProductPage() {
                 is_active: true
             };
 
-            const res = await fetch(`http://localhost:8001/api/products/${id}`, {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api';
+            const res = await fetch(`${apiUrl}/products/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

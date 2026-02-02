@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
-const BASE_URL = 'http://localhost:3000'; // Change this in production
-const API_URL = 'http://localhost:8001/api';
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Static routes

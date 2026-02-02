@@ -19,7 +19,8 @@ export default function CustomersPage() {
     useEffect(() => {
         const fetchCustomers = async () => {
             try {
-                const res = await fetch('http://localhost:8001/api/customers');
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api';
+                const res = await fetch(`${apiUrl}/customers`);
                 if (res.ok) {
                     const data = await res.json();
                     setCustomers(data);
