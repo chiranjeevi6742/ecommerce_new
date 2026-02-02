@@ -10,7 +10,7 @@ load_dotenv()
 app = FastAPI(title="Institute E-Commerce API", version="1.0.0")
 
 # Enable CORS for Frontend
-origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,https://insti-shop.vercel.app").split(",")
 
 app.add_middleware(
     CORSMiddleware,
