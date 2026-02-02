@@ -28,6 +28,8 @@ export default function DashboardOverview() {
     const [data, setData] = useState<DashboardData | null>(null);
     const [loading, setLoading] = useState(true);
 
+    const [error, setError] = useState<string | null>(null);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -35,9 +37,12 @@ export default function DashboardOverview() {
                 const res = await fetch(`${apiUrl}/analytics/dashboard`);
                 if (res.ok) {
                     setData(await res.json());
+                } else {
+                    setError(`Failed to load data: ${res.status} ${res.statusText}`);
                 }
-            } catch (error) {
-                console.error(error);
+            } catch (err) {
+                console.error(err);
+                setError("Failed to connect to backend. Please check your internet or try again later.");
             } finally {
                 setLoading(false);
             }
@@ -45,9 +50,9 @@ export default function DashboardOverview() {
         fetchData();
     }, []);
 
-    if (loading || !data) {
-        return <div className="p-8">Loading dashboard...</div>;
-    }
+    if (loading) return <div className="p-8">Loading dashboard...</div>;
+    if (error) return <div className="p-8 text-red-600 bg-red-50 rounded-xl m-8 border border-red-200">{error}</div>;
+    if (!data) return null;
 
     const { kpi, sales_trend, recent_orders } = data;
 
